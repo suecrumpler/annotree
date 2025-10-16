@@ -58,6 +58,7 @@ dev-dependencies = [
     "twine>=6.1.0",
     "mypy>=1.0.0",
     "pre-commit>=3.0.0",
+    "bump-my-version>=0.26.0",
 ]
 
 [tool.setuptools]
