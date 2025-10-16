@@ -2,6 +2,7 @@
 
 from itertools import islice
 from pathlib import Path
+from typing import Optional
 
 from gitignore_parser import parse_gitignore
 
@@ -53,7 +54,7 @@ def get_folder_description(folder_path):
 
 def tree(
     dir_path: Path,
-    ignore_file: str | None = None,
+    ignore_file: Optional[str] = None,
     level: int = -1,
     limit_to_directories: bool = False,
     length_limit: int = 1000,
