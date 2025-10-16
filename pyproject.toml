@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "annotree"
-version = "0.1.0"
+version = "0.1.1"
 description = "Generate annotated file tree structures with descriptions from file comments"
 readme = "README.md"
 requires-python = ">=3.8"
