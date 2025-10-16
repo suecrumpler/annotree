@@ -6,8 +6,10 @@ Basic tests for annotree functionality.
 
 import tempfile
 from pathlib import Path
+
 import pytest
-from annotree import tree, get_first_line, get_folder_description
+
+from annotree import get_first_line, get_folder_description, tree
 
 
 def test_get_first_line():

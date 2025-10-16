@@ -24,7 +24,7 @@ def get_first_line(file_path):
         str: The first line of the file or an error message.
     """
     try:
-        with open(file_path, "r", encoding="utf-8") as file:
+        with open(file_path, encoding="utf-8") as file:
             first_line = (
                 file.readline().strip().replace("#", "").replace('"', "").replace("<!-- ", "").replace(" -->", "")
             )
@@ -53,7 +53,7 @@ def get_folder_description(folder_path):
 
 def tree(
     dir_path: Path,
-    ignore_file: str = None,
+    ignore_file: str | None = None,
     level: int = -1,
     limit_to_directories: bool = False,
     length_limit: int = 1000,
@@ -91,10 +91,14 @@ def tree(
             ignore_file = str(gitignore_path)
 
     # Create an ignore function
+    def no_ignore(path):
+        """Default ignore function that doesn't ignore anything."""
+        return False
+
     if ignore_file and Path(ignore_file).exists():
         gitignore = parse_gitignore(ignore_file, base_dir=dir_path)
     else:
-        gitignore = lambda x: False  # Don't ignore anything
+        gitignore = no_ignore
 
     files = 0
     directories = 0

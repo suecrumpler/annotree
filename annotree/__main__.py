@@ -6,6 +6,7 @@ Command-line interface for annotree.
 
 import argparse
 from pathlib import Path
+
 from .annotree import tree
 
 

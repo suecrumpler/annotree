@@ -8,7 +8,7 @@ descriptions extracted from the first line of each file, making it easy to docum
 project structures.
 """
 
-from .annotree import tree, get_first_line, get_folder_description
+from .annotree import get_first_line, get_folder_description, tree
 
 __version__ = "0.1.0"
 __author__ = "Sue Crumpler"

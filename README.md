@@ -1,22 +1,22 @@
 # Welcom to Annotree 🌳
 
-[![PyPI version](https://badge.fury.io/py/annotree.svg)](https://badge.fury.io/py/annotree)  
+[![PyPI version](https://badge.fury.io/py/annotree.svg)](https://badge.fury.io/py/annotree)
 [![Python Support](https://img.shields.io/pypi/pyversions/annotree.svg)](https://pypi.org/project/annotree/)
 
-**Annotree generates annotated file trees that read like your code is documenting itself — while preserving Python-style annotations.**  
-It automatically extracts descriptions from file comments, docstrings, and `__init__.py` headers, keeping your project’s natural Python annotation style intact.  
-Perfect for **README files, documentation, and quick project overviews**.  
+**Annotree generates annotated file trees that read like your code is documenting itself — while preserving Python-style annotations.**
+It automatically extracts descriptions from file comments, docstrings, and `__init__.py` headers, keeping your project’s natural Python annotation style intact.
+Perfect for **README files, documentation, and quick project overviews**.
 
 ---
 
 ## ⚡ Key Features
 
-- 🧠 **Automatic Annotations** – Pulls descriptions from first lines, comments, or `__init__.py` docstrings  
-- 📁 **Directory Descriptions** – Folders inherit descriptions from `__init__.py`  
-- 🚫 **Smart Ignore Support** – Honors `.treeignore` or `.gitignore` automatically  
-- 🎨 **Clean, Aligned Output** – Beautiful tree structure with readable annotations  
-- ⚙️ **Customizable** – Control depth, output format, and annotation alignment  
-- 🐍 **Python API & CLI** – Use as a library or from the command line 
+- 🧠 **Automatic Annotations** – Pulls descriptions from first lines, comments, or `__init__.py` docstrings
+- 📁 **Directory Descriptions** – Folders inherit descriptions from `__init__.py`
+- 🚫 **Smart Ignore Support** – Honors `.treeignore` or `.gitignore` automatically
+- 🎨 **Clean, Aligned Output** – Beautiful tree structure with readable annotations
+- ⚙️ **Customizable** – Control depth, output format, and annotation alignment
+- 🐍 **Python API & CLI** – Use as a library or from the command line
 
 ---
 
