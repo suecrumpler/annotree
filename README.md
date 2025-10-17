@@ -61,16 +61,25 @@ annotree
 # Specify output file
 annotree -o structure.txt
 
-# Use specific ignore file
-annotree -i .gitignore
-
-# Limit depth
-annotree -l 3
+# Limit depth to 2 levels
+annotree -l 2
 
 # Show directories only
 annotree -d
 
-# Customize annotation alignment
+# Disable annotations for cleaner output
+annotree --no-annotate
+
+# Combine options: depth 3, no annotations, custom output
+annotree -l 3 --no-annotate -o docs/structure.txt
+
+# Embed tree into README between HTML comment tags
+annotree --embed README.md -l 2 --no-annotate
+
+# Use custom ignore file
+annotree -i .customignore -o tree.txt
+
+# Customize annotation alignment (default: 42)
 annotree -a 60 -o tree.txt
 ```
 
