@@ -1,5 +1,4 @@
-# Example .treeignore file for annotree
-# This file is used specifically for tree generation and is checked before .gitignore
+# This file is used specifically for ignoring files for tree generation
 # You can use this to exclude files from your tree structure without modifying .gitignore
 
 # Ignore rules for annotree project tree generation
@@ -9,15 +8,23 @@ __pycache__/
 *.pyc
 *.pyo
 .pytest_cache/
+
+# Cache directories
+.mypy_cache/
+.ruff_cache/
+
 # Build and distribution
 build/
 dist/
 *.egg-info/
+.github/
+MANIFEST.in
 
 # Virtual environments
 .venv/
 venv/
 env/
+uv.lock
 
 # Test outputs and generated files
 *.txt
@@ -30,3 +37,8 @@ env/
 
 # Git
 .git/
+
+# Other
+*.png
+*.jpg
+docs/

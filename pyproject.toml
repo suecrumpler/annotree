@@ -1,3 +1,4 @@
+# Project configuration for build, tools, and dependencies
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

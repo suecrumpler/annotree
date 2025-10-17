@@ -1,4 +1,4 @@
-# Core tree generation logic with .treeignore and .gitignore support
+# Core tree generation logic
 
 from itertools import islice
 from pathlib import Path
@@ -58,8 +58,9 @@ def tree(
     level: int = -1,
     limit_to_directories: bool = False,
     length_limit: int = 1000,
-    output_file: str = "tree_structure.txt",
+    output_file: Optional[str] = "tree_structure.txt",
     annotation_start: int = 42,
+    annotate: bool = True,
 ):
     """
     Generate and save a visual tree structure of a directory, respecting ignore rules.
@@ -130,7 +131,8 @@ def tree(
             if path.is_dir():
                 description = get_folder_description(path)
                 line = prefix + pointer + path.name
-                line = line.ljust(annotation_start) + f"#{description}"
+                if annotate:
+                    line = line.ljust(annotation_start) + f"#{description}"
                 output_lines.append(line)
                 directories += 1
                 extension = BRANCH if pointer == TEE else SPACE
@@ -142,16 +144,17 @@ def tree(
                         output_lines.append(prefix + extension + EMPTY)
                 except PermissionError:
                     pass
-                output_lines.append(prefix + extension)
+                output_lines.append((prefix + extension).rstrip())
 
             elif not limit_to_directories:
                 # Skip annotation for __init__.py since it's already used for folder description
                 if path.name == "__init__.py":
                     line = prefix + pointer + path.name
                 else:
-                    description = get_first_line(path)
                     line = prefix + pointer + path.name
-                    line = line.ljust(annotation_start) + f"#{description}"
+                    if annotate:
+                        description = get_first_line(path)
+                        line = line.ljust(annotation_start) + f"#{description}"
                 output_lines.append(line)
                 files += 1
 
@@ -163,7 +166,68 @@ def tree(
         output_lines.append(f"... length_limit, {length_limit}, reached, counted:")
     output_lines.append(f"\n{directories} directories" + (f", {files} files" if files else ""))
 
+    # If output_file is None, return the generated lines instead of writing
+    if output_file is None:
+        return directories, files, output_lines
+
     with open(output_file, "w", encoding="utf-8") as f:
         f.write("\n".join(output_lines))
 
     return directories, files
+
+
+def embed_tree_in_file(
+    target_file: Path,
+    dir_path: Path = Path("."),
+    start_tag: str = "<!-- ANNOTREE:START -->",
+    end_tag: str = "<!-- ANNOTREE:END -->",
+    ignore_file: Optional[str] = None,
+    level: int = -1,
+    limit_to_directories: bool = False,
+    length_limit: int = 1000,
+    annotation_start: int = 42,
+    annotate: bool = True,
+):
+    """
+    Replace the section between start_tag and end_tag in target_file with the generated tree.
+
+    Returns True if the file was changed, False if tags not found or no change.
+    """
+    target_file = Path(target_file)
+    if not target_file.exists():
+        raise FileNotFoundError(f"Target file '{target_file}' does not exist")
+
+    # Generate tree as lines
+    dirs, files, lines = tree(
+        dir_path=dir_path,
+        ignore_file=ignore_file,
+        level=level,
+        limit_to_directories=limit_to_directories,
+        length_limit=length_limit,
+        output_file=None,
+        annotation_start=annotation_start,
+        annotate=annotate,
+    )
+
+    tree_text = "\n".join(lines)
+
+    # Read target file
+    content = target_file.read_text(encoding="utf-8")
+
+    if start_tag not in content or end_tag not in content:
+        # Tags not found
+        return False
+
+    before, rest = content.split(start_tag, 1)
+    _, after = rest.split(end_tag, 1)
+
+    # Prepare replacement: fenced code block
+    replacement = f"{start_tag}\n```text\n{tree_text}\n```\n{end_tag}"
+
+    new_content = before + replacement + after
+
+    if new_content == content:
+        return False
+
+    target_file.write_text(new_content, encoding="utf-8")
+    return True

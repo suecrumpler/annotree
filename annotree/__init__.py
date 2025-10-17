@@ -8,8 +8,8 @@ descriptions extracted from the first line of each file, making it easy to docum
 project structures.
 """
 
-from .annotree import get_first_line, get_folder_description, tree
+from .annotree import embed_tree_in_file, get_first_line, get_folder_description, tree
 
 __version__ = "0.1.1"
 __author__ = "Sue Crumpler"
-__all__ = ["tree", "get_first_line", "get_folder_description"]
+__all__ = ["tree", "get_first_line", "get_folder_description", "embed_tree_in_file"]

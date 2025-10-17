@@ -58,6 +58,25 @@ def main():
         default=42,
         help="Column position for annotations (default: 42)",
     )
+    parser.add_argument(
+        "--no-annotate",
+        action="store_true",
+        help="Disable annotations (useful for compact pre-commit updates)",
+    )
+    parser.add_argument(
+        "--embed",
+        help="Path to a file to embed the tree into between tags (e.g., README.md).",
+    )
+    parser.add_argument(
+        "--start-tag",
+        default="<!-- ANNOTREE:START -->",
+        help="Start tag for embedding (default: '<!-- ANNOTREE:START -->')",
+    )
+    parser.add_argument(
+        "--end-tag",
+        default="<!-- ANNOTREE:END -->",
+        help="End tag for embedding (default: '<!-- ANNOTREE:END -->')",
+    )
 
     args = parser.parse_args()
 
@@ -71,20 +90,46 @@ def main():
         return 1
 
     print(f"Generating tree structure for: {dir_path.absolute()}")
-    print(f"Output file: {args.output}")
 
-    dirs, files = tree(
-        dir_path=dir_path,
-        ignore_file=args.ignore,
-        level=args.level,
-        limit_to_directories=args.directories_only,
-        length_limit=args.limit,
-        output_file=args.output,
-        annotation_start=args.annotation_start,
-    )
+    # If embedding requested, skip writing to output file and embed directly
+    if args.embed:
+        from .annotree import embed_tree_in_file
 
-    print(f"✓ Tree structure saved to '{args.output}'")
-    print(f"  {dirs} directories, {files} files")
+        target = Path(args.embed)
+        print(f"Embedding tree into: {target}")
+        changed = embed_tree_in_file(
+            target_file=target,
+            dir_path=dir_path,
+            start_tag=args.start_tag,
+            end_tag=args.end_tag,
+            ignore_file=args.ignore,
+            level=args.level,
+            limit_to_directories=args.directories_only,
+            length_limit=args.limit,
+            annotation_start=args.annotation_start,
+            annotate=not args.no_annotate,
+        )
+        if changed:
+            print("✓ Embedded tree into file (file updated).")
+        else:
+            print("No changes made when embedding (tags missing or no diff).")
+    else:
+        # Normal file output mode
+        print(f"Output file: {args.output}")
+
+        dirs, files = tree(
+            dir_path=dir_path,
+            ignore_file=args.ignore,
+            level=args.level,
+            limit_to_directories=args.directories_only,
+            length_limit=args.limit,
+            output_file=args.output,
+            annotation_start=args.annotation_start,
+            annotate=not args.no_annotate,
+        )
+
+        print(f"✓ Tree structure saved to '{args.output}'")
+        print(f"  {dirs} directories, {files} files")
 
     return 0
 

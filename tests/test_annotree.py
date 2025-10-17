@@ -123,5 +123,74 @@ def test_tree_directories_only():
         assert files == 0  # Should be 0 when limit_to_directories is True
 
 
+def test_embed_tree_in_file():
+    """Test embedding tree into a file between tags."""
+    from annotree import embed_tree_in_file
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        temp_path = Path(tmpdir)
+
+        # Create a simple file structure
+        (temp_path / "test.py").write_text("# Test file\n")
+        (temp_path / "subdir").mkdir()
+        (temp_path / "subdir" / "another.py").write_text("# Another test\n")
+
+        # Create a target file with tags
+        target_file = temp_path / "README.md"
+        target_file.write_text(
+            "# My Project\n\n"
+            "## File Structure\n\n"
+            "<!-- ANNOTREE:START -->\n"
+            "<!-- ANNOTREE:END -->\n\n"
+            "## More content\n"
+        )
+
+        # Embed the tree
+        changed = embed_tree_in_file(
+            target_file=target_file,
+            dir_path=temp_path,
+            annotate=False,
+        )
+
+        assert changed is True
+        content = target_file.read_text()
+
+        # Should contain the tags and a code block
+        assert "<!-- ANNOTREE:START -->" in content
+        assert "<!-- ANNOTREE:END -->" in content
+        assert "```text" in content
+        assert "test.py" in content or "subdir" in content
+
+        # Test no change when running again
+        changed_again = embed_tree_in_file(
+            target_file=target_file,
+            dir_path=temp_path,
+            annotate=False,
+        )
+        assert changed_again is False
+
+
+def test_embed_tree_no_tags():
+    """Test embedding when tags are missing."""
+    from annotree import embed_tree_in_file
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        temp_path = Path(tmpdir)
+
+        # Create a target file WITHOUT tags
+        target_file = temp_path / "README.md"
+        target_file.write_text("# My Project\n\nNo tags here.\n")
+
+        # Try to embed - should return False
+        changed = embed_tree_in_file(
+            target_file=target_file,
+            dir_path=temp_path,
+        )
+
+        assert changed is False
+        # Original content should be unchanged
+        assert target_file.read_text() == "# My Project\n\nNo tags here.\n"
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
