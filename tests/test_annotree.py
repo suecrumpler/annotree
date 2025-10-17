@@ -138,11 +138,7 @@ def test_embed_tree_in_file():
         # Create a target file with tags
         target_file = temp_path / "README.md"
         target_file.write_text(
-            "# My Project\n\n"
-            "## File Structure\n\n"
-            "<!-- ANNOTREE:START -->\n"
-            "<!-- ANNOTREE:END -->\n\n"
-            "## More content\n"
+            "# My Project\n\n## File Structure\n\n<!-- ANNOTREE:START -->\n<!-- ANNOTREE:END -->\n\n## More content\n"
         )
 
         # Embed the tree
