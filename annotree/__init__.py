@@ -10,6 +10,6 @@ project structures.
 
 from .annotree import embed_tree_in_file, get_first_line, get_folder_description, tree
 
-__version__ = "0.1.1"
+__version__ = "0.2.0"
 __author__ = "Sue Crumpler"
 __all__ = ["tree", "get_first_line", "get_folder_description", "embed_tree_in_file"]
